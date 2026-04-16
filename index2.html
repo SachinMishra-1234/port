@@ -1,0 +1,1787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sachin Mishra | AI & Robotics Engineer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --neon-blue: #00f0ff;
+            --neon-pink: #ff2d75;
+            --deep-space: #0a0a12;
+            --void-black: #050508;
+            --starlight: #e0e0e8;
+            --matrix-green: #00ff41;
+            --glow-blue: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-blue);
+            --glow-pink: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-pink);
+            --glow-green: 0 0 10px var(--matrix-green), 0 0 20px var(--matrix-green);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--deep-space);
+            color: var(--starlight);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* **Floating HUD Elements (Iron Man UI Simulation)** */
+        .hud-element {
+            position: fixed;
+            border-radius: 50%;
+            border: 1px solid var(--neon-blue);
+            opacity: 0.2;
+            pointer-events: none;
+            z-index: -1;
+            animation: float 8s infinite ease-in-out;
+            filter: blur(1px);
+        }
+
+        .hud-circle-1 {
+            width: 300px;
+            height: 300px;
+            top: 10%;
+            left: 5%;
+            box-shadow: var(--glow-blue);
+            animation-delay: 0s;
+        }
+
+        .hud-circle-2 {
+            width: 200px;
+            height: 200px;
+            bottom: 15%;
+            right: 8%;
+            box-shadow: var(--glow-pink);
+            animation-delay: 2s;
+        }
+
+        .hud-triangle {
+            width: 150px;
+            height: 150px;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            top: 70%;
+            left: 10%;
+            border: none;
+            background: rgba(0, 240, 255, 0.05);
+            animation-delay: 1s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        /* **Particle Background (J.A.R.V.I.S. Inspired)** */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: radial-gradient(ellipse at bottom, var(--void-black) 0%, #090a0f 100%);
+        }
+
+        /* **Iron Man Hand Light Simulation** */
+        .hand-light {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0, 240, 255, 0.1) 0%, transparent 70%);
+            filter: blur(30px);
+            z-index: -1;
+            animation: pulse 4s infinite alternate;
+        }
+
+        .hand-light.top-right {
+            top: -100px;
+            right: -100px;
+            animation-delay: 1s;
+        }
+
+        .hand-light.bottom-left {
+            bottom: -100px;
+            left: -100px;
+            animation-delay: 2s;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.3; transform: scale(0.8); }
+            100% { opacity: 0.8; transform: scale(1.2); }
+        }
+
+        /* **Live Code Simulation Terminal** */
+        .code-terminal {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 400px;
+            height: 250px;
+            background: rgba(0, 10, 15, 0.9);
+            border: 2px solid var(--matrix-green);
+            border-radius: 10px;
+            box-shadow: var(--glow-green);
+            overflow: hidden;
+            z-index: 100;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+
+        .code-terminal.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .terminal-header {
+            padding: 10px 15px;
+            background: rgba(0, 20, 30, 0.8);
+            border-bottom: 1px solid var(--matrix-green);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .terminal-title {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--matrix-green);
+            font-size: 0.9rem;
+        }
+
+        .terminal-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .terminal-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .terminal-btn.close {
+            background: #ff5f56;
+        }
+
+        .terminal-btn.minimize {
+            background: #ffbd2e;
+        }
+
+        .terminal-btn.maximize {
+            background: #27c93f;
+        }
+
+        .terminal-body {
+            padding: 15px;
+            height: calc(100% - 40px);
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: var(--matrix-green);
+        }
+
+        .code-line {
+            margin-bottom: 5px;
+            white-space: pre-wrap;
+        }
+
+        .code-line::before {
+            content: '> ';
+            color: var(--matrix-green);
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 16px;
+            background: var(--matrix-green);
+            animation: blink 1s infinite;
+            vertical-align: middle;
+            margin-left: 2px;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* **Header (Stark Industries Style)** */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(10, 10, 18, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 240, 255, 0.1);
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--neon-blue);
+            text-decoration: none;
+            letter-spacing: 2px;
+            text-shadow: var(--glow-blue);
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            text-shadow: 0 0 20px var(--neon-blue);
+        }
+
+        .logo span {
+            color: var(--neon-pink);
+            text-shadow: var(--glow-pink);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            position: relative;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            color: var(--starlight);
+            text-decoration: none;
+            letter-spacing: 1px;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink));
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--neon-blue);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a.active {
+            color: var(--neon-blue);
+            text-shadow: var(--glow-blue);
+        }
+
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .terminal-toggle {
+            margin-left: 2rem;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 240, 255, 0.1);
+            border: 1px solid var(--neon-blue);
+            border-radius: 5px;
+            color: var(--neon-blue);
+            font-family: 'Orbitron', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .terminal-toggle:hover {
+            background: var(--neon-blue);
+            color: var(--void-black);
+            box-shadow: var(--glow-blue);
+        }
+
+        /* **Main Sections** */
+        section {
+            padding: 6rem 5%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* **Hero Section (Iron Man Suit-Up Animation)** */
+        #hero {
+            background: linear-gradient(to bottom, var(--void-black), var(--deep-space));
+            text-align: center;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, var(--neon-blue), var(--neon-pink));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 30px rgba(0, 240, 255, 0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            color: var(--starlight);
+            opacity: 0.9;
+        }
+
+        .typewriter {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            color: var(--neon-blue);
+            height: 3rem;
+            margin-bottom: 2rem;
+            text-shadow: var(--glow-blue);
+        }
+
+        .hero-btns {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .btn {
+            position: relative;
+            padding: 1rem 2.5rem;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            color: var(--starlight);
+            background: transparent;
+            border: 2px solid var(--neon-blue);
+            border-radius: 50px;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            z-index: 1;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.3), transparent);
+            transition: all 0.6s ease;
+            z-index: -1;
+        }
+
+        .btn:hover {
+            color: var(--void-black);
+            background: var(--neon-blue);
+            box-shadow: var(--glow-blue);
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: var(--neon-blue);
+            color: var(--void-black);
+            font-weight: 700;
+        }
+
+        .btn-primary:hover {
+            background: var(--neon-pink);
+            border-color: var(--neon-pink);
+            box-shadow: var(--glow-pink);
+        }
+
+        /* **About Section (With Iron Man HUD Video)** */
+        #about {
+            background-color: var(--void-black);
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            margin-bottom: 3rem;
+            color: var(--neon-blue);
+            text-shadow: var(--glow-blue);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink));
+        }
+
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 4rem;
+        }
+
+        .about-text {
+            flex: 1;
+        }
+
+        .about-text p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            color: var(--starlight);
+        }
+
+        .about-image {
+            flex: 1;
+            position: relative;
+            min-height: 500px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid var(--neon-blue);
+            box-shadow: var(--glow-blue);
+        }
+
+        .tech-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.9;
+            filter: hue-rotate(180deg) contrast(120%) brightness(0.8);
+        }
+
+        /* **Skills Grid (Holographic Display)** */
+        .skills-container {
+            margin-top: 4rem;
+        }
+
+        .skills-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            color: var(--neon-pink);
+            text-shadow: var(--glow-pink);
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 2rem;
+        }
+
+        .skill-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 1.5rem;
+            background: rgba(0, 240, 255, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+        }
+
+        .skill-item:hover {
+            background: rgba(0, 240, 255, 0.15);
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: var(--glow-blue);
+            border-color: var(--neon-blue);
+        }
+
+        .skill-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--neon-blue);
+            transition: all 0.3s ease;
+        }
+
+        .skill-item:hover .skill-icon {
+            transform: rotate(15deg) scale(1.2);
+            color: var(--neon-pink);
+        }
+
+        .skill-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--starlight);
+            letter-spacing: 1px;
+        }
+
+        /* **Projects Section (Interactive Holograms)** */
+        #projects {
+            background-color: var(--deep-space);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .project-card {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            transition: all 0.5s ease;
+            height: 500px;
+            background: rgba(10, 10, 18, 0.7);
+            backdrop-filter: blur(5px);
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.1) 0%, transparent 50%);
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-15px) rotateX(5deg);
+            box-shadow: var(--glow-blue);
+            border-color: var(--neon-blue);
+        }
+
+        .project-card:hover::before {
+            opacity: 1;
+        }
+
+        .project-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            filter: grayscale(50%) contrast(120%) brightness(0.7);
+            transition: all 0.5s ease;
+        }
+
+        .project-card:hover .project-image {
+            filter: grayscale(0%) contrast(100%) brightness(1);
+            transform: scale(1.05);
+        }
+
+        .project-content {
+            padding: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .project-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px var(--neon-blue);
+        }
+
+        .project-description {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: var(--starlight);
+            margin-bottom: 1.5rem;
+            height: 80px;
+            overflow: hidden;
+        }
+
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-bottom: 2rem;
+        }
+
+        .tech-tag {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            background: rgba(0, 240, 255, 0.1);
+            border-radius: 50px;
+            color: var(--neon-blue);
+            border: 1px solid var(--neon-blue);
+            transition: all 0.3s ease;
+        }
+
+        .project-card:hover .tech-tag {
+            background: rgba(255, 45, 117, 0.2);
+            color: var(--neon-pink);
+            border-color: var(--neon-pink);
+        }
+
+        .project-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .project-link {
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            background: transparent;
+            border: 1px solid var(--neon-blue);
+            border-radius: 50px;
+            color: var(--neon-blue);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .project-link i {
+            font-size: 1.2rem;
+        }
+
+        .project-link:hover {
+            background: var(--neon-blue);
+            color: var(--void-black);
+            box-shadow: var(--glow-blue);
+            transform: translateY(-3px);
+        }
+
+        .project-link.demo:hover {
+            background: var(--neon-pink);
+            border-color: var(--neon-pink);
+            box-shadow: var(--glow-pink);
+        }
+
+        /* **Project Modal (Holographic Popup)** */
+        .project-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 5, 8, 0.9);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.5s ease;
+        }
+
+        .project-modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            position: relative;
+            width: 80%;
+            max-width: 1000px;
+            background: rgba(10, 10, 18, 0.9);
+            border-radius: 20px;
+            border: 2px solid var(--neon-blue);
+            box-shadow: var(--glow-blue);
+            padding: 3rem;
+            transform: scale(0.8);
+            transition: all 0.5s ease;
+        }
+
+        .project-modal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2rem;
+            color: var(--neon-pink);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close-modal:hover {
+            transform: rotate(90deg);
+            color: var(--neon-blue);
+        }
+
+        /* **Contact Section (J.A.R.V.I.S. Interface)** */
+        #contact {
+            background-color: var(--void-black);
+        }
+
+        .contact-container {
+            display: flex;
+            gap: 4rem;
+        }
+
+        .contact-info {
+            flex: 1;
+        }
+
+        .contact-card {
+            background: rgba(0, 240, 255, 0.05);
+            border-radius: 15px;
+            padding: 2.5rem;
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            margin-bottom: 2rem;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .contact-card:hover {
+            background: rgba(0, 240, 255, 0.1);
+            transform: translateY(-10px);
+            box-shadow: var(--glow-blue);
+            border-color: var(--neon-blue);
+        }
+
+        .contact-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px var(--neon-blue);
+        }
+
+        .contact-detail {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-icon {
+            font-size: 1.5rem;
+            color: var(--neon-blue);
+            margin-right: 1.5rem;
+            width: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .contact-card:hover .contact-icon {
+            color: var(--neon-pink);
+            transform: scale(1.2);
+        }
+
+        .contact-text {
+            font-size: 1.2rem;
+            color: var(--starlight);
+        }
+
+        .contact-text a {
+            color: var(--neon-blue);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .contact-text a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--neon-pink);
+            transition: width 0.3s ease;
+        }
+
+        .contact-text a:hover {
+            color: var(--neon-pink);
+            text-shadow: var(--glow-pink);
+        }
+
+        .contact-text a:hover::after {
+            width: 100%;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(0, 240, 255, 0.1);
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
+            font-size: 1.5rem;
+            transition: all 0.4s ease;
+        }
+
+        .social-link:hover {
+            background: var(--neon-blue);
+            color: var(--void-black);
+            box-shadow: var(--glow-blue);
+            transform: translateY(-5px) rotate(10deg);
+        }
+
+        .contact-form {
+            flex: 1;
+            background: rgba(0, 240, 255, 0.05);
+            border-radius: 15px;
+            padding: 2.5rem;
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            backdrop-filter: blur(5px);
+            transition: all 0.4s ease;
+        }
+
+        .contact-form:hover {
+            border-color: var(--neon-blue);
+            box-shadow: var(--glow-blue);
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 1.1rem;
+            margin-bottom: 0.8rem;
+            color: var(--neon-blue);
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            font-size: 1.1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            border-radius: 8px;
+            color: var(--starlight);
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--neon-pink);
+            box-shadow: var(--glow-pink);
+        }
+
+        textarea.form-input {
+            min-height: 180px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            padding: 1rem 2.5rem;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            background: var(--neon-blue);
+            color: var(--void-black);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin: 0 auto;
+        }
+
+        .submit-btn i {
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: var(--neon-pink);
+            box-shadow: var(--glow-pink);
+            transform: translateY(-3px);
+        }
+
+        .submit-btn:hover i {
+            transform: rotate(45deg);
+        }
+
+        /* **Footer (Stark Industries Style)** */
+        footer {
+            background-color: var(--void-black);
+            padding: 3rem 5%;
+            text-align: center;
+            border-top: 1px solid rgba(0, 240, 255, 0.2);
+        }
+
+        .footer-text {
+            font-size: 1.1rem;
+            color: var(--starlight);
+            opacity: 0.8;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .footer-text a {
+            color: var(--neon-blue);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-text a:hover {
+            color: var(--neon-pink);
+            text-shadow: var(--glow-pink);
+        }
+
+        /* **Responsive Design** */
+        @media (max-width: 1200px) {
+            .projects-grid {
+                grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            }
+
+            .code-terminal {
+                width: 350px;
+                height: 220px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .about-content, .contact-container {
+                flex-direction: column;
+            }
+
+            .about-image {
+                min-height: 400px;
+                width: 100%;
+                order: -1;
+            }
+
+            .hero-title {
+                font-size: 3.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.5rem;
+            }
+
+            .code-terminal {
+                right: 20px;
+                bottom: 20px;
+                width: 300px;
+                height: 200px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .projects-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                gap: 2rem;
+            }
+
+            .hero-title {
+                font-size: 2.8rem;
+            }
+
+            .typewriter {
+                font-size: 1.5rem;
+            }
+
+            .section-title {
+                font-size: 2.5rem;
+            }
+
+            .skills-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+
+            .terminal-toggle {
+                display: none;
+            }
+
+            .code-terminal {
+                display: none;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero-title {
+                font-size: 2.2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .hero-btns {
+                flex-direction: column;
+                align-items: center;
+                gap: 1.5rem;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 250px;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .project-card {
+                height: auto;
+            }
+
+            .project-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .project-link {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- **HUD Elements (Iron Man UI Simulation)** -->
+    <div class="hud-element hud-circle-1"></div>
+    <div class="hud-element hud-circle-2"></div>
+    <div class="hud-element hud-triangle"></div>
+
+    <!-- **Particle Background (J.A.R.V.I.S. Inspired)** -->
+    <div id="particles-js"></div>
+
+    <!-- **Iron Man Hand Light Simulation** -->
+    <div class="hand-light top-right"></div>
+    <div class="hand-light bottom-left"></div>
+
+    <!-- **Live Code Simulation Terminal** -->
+    <div class="code-terminal" id="codeTerminal">
+        <div class="terminal-header">
+            <div class="terminal-title">CODE_SIMULATION.exe</div>
+            <div class="terminal-controls">
+                <div class="terminal-btn close" id="terminalClose"></div>
+                <div class="terminal-btn minimize"></div>
+                <div class="terminal-btn maximize"></div>
+            </div>
+        </div>
+        <div class="terminal-body" id="terminalBody">
+            <!-- Code lines will be added dynamically -->
+        </div>
+    </div>
+
+    <!-- **Header** -->
+    <header>
+        <a href="#" class="logo">SACHIN<span>MISHRA</span></a>
+        <nav class="nav-links">
+            <a href="#about" class="active">ABOUT</a>
+            <a href="#projects">PROJECTS</a>
+            <a href="#contact">CONTACT</a>
+            <div class="terminal-toggle" id="terminalToggle">
+                <i class="fas fa-code"></i> TERMINAL
+            </div>
+        </nav>
+    </header>
+
+    <!-- **Main Content** -->
+    <main>
+        <!-- **Hero Section** -->
+        <section id="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">AI & ROBOTICS ENGINEER</h1>
+                <h2 class="hero-subtitle">Building the Future with Intelligent Systems</h2>
+                <div class="typewriter" id="typewriter"></div>
+                <div class="hero-btns">
+                    <a href="#projects" class="btn btn-primary">
+                        <i class="fas fa-code"></i> VIEW WORK
+                    </a>
+                    <a href="#contact" class="btn">
+                        <i class="fas fa-paper-plane"></i> CONTACT ME
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- **About Section** -->
+        <section id="about">
+            <h2 class="section-title">ABOUT ME</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>Hello! I'm <strong>Sachin Mishra</strong>, a passionate <strong>AI & Robotics Engineer</strong> with expertise in developing cutting-edge intelligent systems. With over <strong>5+ years</strong> of experience in the field, I specialize in creating solutions that blend artificial intelligence with robotics to solve real-world problems.</p>
+                    <p>My journey began when I built my first robot at 16, and since then, I've been obsessed with pushing the boundaries of what's possible with technology. I've worked on projects ranging from <strong>autonomous drones</strong> to <strong>neural network-powered robotics</strong>, always striving to innovate.</p>
+                    <p>When I'm not coding, you can find me tinkering with new robotics kits, contributing to open-source AI projects, or mentoring the next generation of engineers. I believe technology should be both <strong>powerful</strong> and <strong>accessible</strong>, and I'm committed to making that vision a reality.</p>
+                    
+                    <div class="skills-container">
+                        <h3 class="skills-title">TECHNICAL SKILLS</h3>
+                        <div class="skills-grid">
+                            <div class="skill-item">
+                                <div class="skill-icon"><i class="fas fa-robot"></i></div>
+                                <span class="skill-name">Robotics</span>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-icon"><i class="fas fa-brain"></i></div>
+                                <span class="skill-name">Machine Learning</span>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-icon"><i class="fab fa-python"></i></div>
+                                <span class="skill-name">Python</span>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-icon"><i class="fas fa-project-diagram"></i></div>
+                                <span class="skill-name">Data Science</span>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-icon"><i class="fas fa-microchip"></i></div>
+                                <span class="skill-name">Embedded Systems</span>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-icon"><i class="fab fa-raspberry-pi"></i></div>
+                                <span class="skill-name">Raspberry Pi</span>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-icon"><i class="fas fa-code"></i></div>
+                                <span class="skill-name">C++</span>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-icon"><i class="fas fa-cloud"></i></div>
+                                <span class="skill-name">Cloud AI</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image">
+    <!-- *Iron Man Hand Light Simulation Image* -->
+    <img class="tech-image" src="https://example.com/iron-man-hand-lights.jpg" alt="Iron Man Hand Light Simulation">
+</div>
+            </div>
+        </section>
+
+        <!-- **Projects Section** -->
+        <section id="projects">
+            <h2 class="section-title">MY PROJECTS</h2>
+            <div class="projects-grid">
+                <!-- Project 1 -->
+                <div class="project-card" data-project="1">
+                    <img src="https://example.com/project-ai-assistant.jpg" alt="AI Assistant" class="project-image">
+                    <div class="project-content">
+                        <h3 class="project-title">Octopus AI Assistant</h3>
+                        <p class="project-description">An advanced AI personal assistant with natural language processing, computer vision, and smart home integration, inspired by Tony Stark's creation.</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">Python</span>
+                            <span class="tech-tag">TensorFlow</span>
+                            <span class="tech-tag">OpenCV</span>
+                            <span class="tech-tag">IoT</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="project-link demo">
+                                <i class="fas fa-play"></i> DEMO
+                            </a>
+                            <a href="#" class="project-link">
+                                <i class="fab fa-github"></i> CODE
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="project-card" data-project="2">
+                    <img src="https://example.com/project-autonomous-drone.jpg" alt="Autonomous Drone" class="project-image">
+                    <div class="project-content">
+                        <h3 class="project-title">Autonomous Delivery Drone</h3>
+                        <p class="project-description">A self-navigating drone system capable of package delivery with obstacle avoidance, route optimization, and facial recognition for secure drop-off.</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">ROS</span>
+                            <span class="tech-tag">Computer Vision</span>
+                            <span class="tech-tag">Arduino</span>
+                            <span class="tech-tag">C++</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="project-link demo">
+                                <i class="fas fa-play"></i> DEMO
+                            </a>
+                            <a href="#" class="project-link">
+                                <i class="fab fa-github"></i> CODE
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="project-card" data-project="3">
+                    <img src="https://example.com/project-robotic-arm.jpg" alt="Robotic Arm" class="project-image">
+                    <div class="project-content">
+                        <h3 class="project-title">AI-Powered Robotic Arm</h3>
+                        <p class="project-description">A 6-axis robotic arm with machine learning capabilities for object recognition, sorting, and precision manipulation tasks in industrial settings.</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">Python</span>
+                            <span class="tech-tag">TensorFlow</span>
+                            <span class="tech-tag">Raspberry Pi</span>
+                            <span class="tech-tag">OpenCV</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="project-link demo">
+                                <i class="fas fa-play"></i> DEMO
+                            </a>
+                            <a href="#" class="project-link">
+                                <i class="fab fa-github"></i> CODE
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 4 -->
+                <div class="project-card" data-project="4">
+                    <img src="https://example.com/project-health-monitor.jpg" alt="Health Monitor" class="project-image">
+                    <div class="project-content">
+                        <h3 class="project-title">AI Health Monitoring System</h3>
+                        <p class="project-description">A wearable device with AI analytics that monitors vital signs and predicts potential health issues using advanced machine learning algorithms.</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">IoT</span>
+                            <span class="tech-tag">ML</span>
+                            <span class="tech-tag">Flutter</span>
+                            <span class="tech-tag">Firebase</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="project-link demo">
+                                <i class="fas fa-play"></i> DEMO
+                            </a>
+                            <a href="#" class="project-link">
+                                <i class="fab fa-github"></i> CODE
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 5 -->
+                <div class="project-card" data-project="5">
+                    <img src="https://example.com/project-smart-city.jpg" alt="Smart City" class="project-image">
+                    <div class="project-content">
+                        <h3 class="project-title">Smart City IoT Platform</h3>
+                        <p class="project-description">An integrated IoT platform for smart cities that manages traffic, pollution monitoring, and energy consumption through a network of AI-powered sensors.</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">IoT</span>
+                            <span class="tech-tag">AWS</span>
+                            <span class="tech-tag">React</span>
+                            <span class="tech-tag">Node.js</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="project-link demo">
+                                <i class="fas fa-play"></i> DEMO
+                            </a>
+                            <a href="#" class="project-link">
+                                <i class="fab fa-github"></i> CODE
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 6 -->
+                <div class="project-card" data-project="6">
+                    <img src="https://example.com/project-blockchain.jpg" alt="Blockchain" class="project-image">
+                    <div class="project-content">
+                        <h3 class="project-title">Secure Blockchain Platform</h3>
+                        <p class="project-description">A decentralized blockchain platform with smart contract functionality, designed for secure transactions and data integrity verification.</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">Solidity</span>
+                            <span class="tech-tag">Ethereum</span>
+                            <span class="tech-tag">Node.js</span>
+                            <span class="tech-tag">React</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="project-link demo">
+                                <i class="fas fa-play"></i> DEMO
+                            </a>
+                            <a href="#" class="project-link">
+                                <i class="fab fa-github"></i> CODE
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- **Project Modal (Hidden by Default)** -->
+        <div class="project-modal" id="projectModal">
+            <div class="modal-content">
+                <span class="close-modal" id="closeModal">&times;</span>
+                <h2 class="project-title" id="modalTitle">Project Title</h2>
+                <div class="modal-body" id="modalBody">
+                    <!-- Content will be loaded dynamically -->
+                </div>
+            </div>
+        </div>
+
+        <!-- **Contact Section** -->
+        <section id="contact">
+            <h2 class="section-title">GET IN TOUCH</h2>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <div class="contact-card">
+                        <h3 class="contact-title">CONTACT INFO</h3>
+                        <div class="contact-detail">
+                            <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                            <div class="contact-text">
+                                <a href="mailto:sachin@example.com">sachin969574@gmail.com</a>
+                            </div>
+                        </div>
+                        <div class="contact-detail">
+                            <div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
+                            <div class="contact-text">
+                                <a href="tel:+1234567890">+91 955 583 6280</a>
+                            </div>
+                        </div>
+                        <div class="contact-detail">
+                            <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+                            <div class="contact-text">
+                                Varanasi, UP
+                            </div>
+                        </div>
+                        <div class="social-links">
+                            <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                            <a href="https://www.linkedin.com/in/sachin-mishra-81a0bb337/" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="contact-card">
+                        <h3 class="contact-title">AVAILABILITY</h3>
+                        <div class="contact-detail">
+                            <div class="contact-icon"><i class="fas fa-clock"></i></div>
+                            <div class="contact-text">
+                                Mon-Fri: 9AM - 5PM IST
+                            </div>
+                        </div>
+                        <div class="contact-detail">
+                            <div class="contact-icon"><i class="fas fa-briefcase"></i></div>
+                            <div class="contact-text">
+                                Available for freelance projects
+                            </div>
+                        </div>
+                        <div class="contact-detail">
+                            <div class="contact-icon"><i class="fas fa-handshake"></i></div>
+                            <div class="contact-text">
+                                Open to collaborations
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="name" class="form-label">YOUR NAME</label>
+                            <input type="text" id="name" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="form-label">YOUR EMAIL</label>
+                            <input type="email" id="email" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject" class="form-label">SUBJECT</label>
+                            <input type="text" id="subject" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message" class="form-label">MESSAGE</label>
+                            <textarea id="message" class="form-input" required></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-paper-plane"></i> SEND MESSAGE
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- **Footer** -->
+    <footer>
+        <p class="footer-text">© 2025 <a href="#">SACHIN MISHRA</a>. ALL RIGHTS RESERVED. | DESIGNED WITH <i class="fas fa-heart" style="color: var(--neon-pink);"></i> AND <i class="fas fa-robot" style="color: var(--neon-blue);"></i></p>
+    </footer>
+
+    <!-- **JavaScript for Interactive Elements** -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // **Particle.js Background (J.A.R.V.I.S. Inspired)**
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": "#00f0ff" },
+                "shape": { "type": "circle", "stroke": { "width": 0, "color": "#000000" } },
+                "opacity": { "value": 0.5, "random": true },
+                "size": { "value": 3, "random": true },
+                "line_linked": { "enable": true, "distance": 150, "color": "#00f0ff", "opacity": 0.3, "width": 1 },
+                "move": { "enable": true, "speed": 2, "direction": "none", "random": true, "straight": false, "out_mode": "out" }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": { "enable": true, "mode": "repulse" },
+                    "onclick": { "enable": true, "mode": "push" }
+                },
+                "modes": {
+                    "repulse": { "distance": 100, "duration": 0.4 },
+                    "push": { "particles_nb": 4 }
+                }
+            }
+        });
+
+        // **Typewriter Effect**
+        const typewriterElement = document.getElementById('typewriter');
+        const phrases = [
+            "Building Intelligent Systems",
+            "Developing AI Solutions",
+            "Creating Robotics Applications",
+            "Pushing Technological Boundaries",
+            "Innovating for the Future"
+        ];
+        let phraseIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        let isEnd = false;
+
+        function typeWriter() {
+            const currentPhrase = phrases[phraseIndex];
+            
+            if (isDeleting) {
+                typewriterElement.textContent = currentPhrase.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typewriterElement.textContent = currentPhrase.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            if (!isDeleting && charIndex === currentPhrase.length) {
+                isEnd = true;
+                isDeleting = true;
+                setTimeout(typeWriter, 1500);
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                phraseIndex = (phraseIndex + 1) % phrases.length;
+                setTimeout(typeWriter, 500);
+            } else {
+                const speed = isDeleting ? 50 : 100;
+                setTimeout(typeWriter, speed);
+            }
+        }
+
+        // **Smooth Scrolling for Navigation**
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+
+                // Update active nav link
+                document.querySelectorAll('.nav-links a').forEach(link => {
+                    link.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+
+        // **Change Active Nav Link on Scroll**
+        window.addEventListener('scroll', function() {
+            const scrollPosition = window.scrollY;
+
+            document.querySelectorAll('section').forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                const sectionHeight = section.offsetHeight;
+                const sectionId = section.getAttribute('id');
+
+                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                    document.querySelectorAll('.nav-links a').forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${sectionId}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        });
+
+        // **Project Modal Functionality**
+        const projectCards = document.querySelectorAll('.project-card');
+        const projectModal = document.getElementById('projectModal');
+        const closeModal = document.getElementById('closeModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+
+        // Sample project data (in a real scenario, this would come from an API)
+        const projects = {
+            1: {
+                title: "J.A.R.V.I.S. AI Assistant",
+                description: "An advanced AI personal assistant with natural language processing, computer vision, and smart home integration, inspired by Tony Stark's creation. This project combines multiple AI technologies to create a seamless human-computer interaction experience.",
+                features: [
+                    "Voice recognition and natural language understanding",
+                    "Facial recognition for personalized responses",
+                    "Smart home device integration",
+                    "Real-time data analysis and visualization",
+                    "Customizable personality and responses"
+                ],
+                technologies: ["Python", "TensorFlow", "OpenCV", "IoT", "NLP"],
+                demo: "#",
+                code: "#"
+            },
+            // Other projects would follow the same structure
+        };
+
+        projectCards.forEach(card => {
+            card.addEventListener('click', function() {
+                const projectId = this.getAttribute('data-project');
+                const project = projects[projectId];
+
+                modalTitle.textContent = project.title;
+                
+                let modalContent = `
+                    <p class="project-description">${project.description}</p>
+                    <div class="project-features">
+                        <h3>KEY FEATURES</h3>
+                        <ul>
+                            ${project.features.map(feature => `<li>${feature}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <div class="project-tech">
+                        <h3>TECHNOLOGIES</h3>
+                        <div class="tech-tags">
+                            ${project.technologies.map(tech => `<span class="tech-tag">${tech}</span>`).join('')}
+                        </div>
+                    </div>
+                    <div class="project-links">
+                        <a href="${project.demo}" class="project-link demo" target="_blank">
+                            <i class="fas fa-play"></i> LIVE DEMO
+                        </a>
+                        <a href="${project.code}" class="project-link" target="_blank">
+                            <i class="fab fa-github"></i> VIEW CODE
+                        </a>
+                    </div>
+                `;
+
+                modalBody.innerHTML = modalContent;
+                projectModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        closeModal.addEventListener('click', function() {
+            projectModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target === projectModal) {
+                projectModal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // **Code Terminal Simulation**
+        const codeTerminal = document.getElementById('codeTerminal');
+        const terminalToggle = document.getElementById('terminalToggle');
+        const terminalClose = document.getElementById('terminalClose');
+        const terminalBody = document.getElementById('terminalBody');
+
+        // Sample code lines for terminal simulation
+        const codeLines = [
+            "Initializing system...",
+            "Loading AI modules...",
+            "Connecting to neural network...",
+            "Establishing quantum link...",
+            "System ready for commands",
+            "> python AI_Assistant.py --start",
+            "J.A.R.V.I.S. AI Assistant v3.2.1",
+            "Voice recognition: ONLINE",
+            "Computer vision: ONLINE",
+            "IoT control: ONLINE",
+            "System diagnostics: ALL GREEN",
+            "> run diagnostics",
+            "Running full system diagnostics...",
+            "CPU: 12% load",
+            "Memory: 24% used",
+            "Network: 5G connected",
+            "Power: 98% capacity",
+            "All systems nominal",
+            "> help",
+            "Available commands:",
+            "start - Initialize all systems",
+            "diagnostics - Run system check",
+            "update - Check for upgrades",
+            "exit - Shutdown system",
+            "> _"
+        ];
+
+        // Initialize terminal with code lines
+        function initTerminal() {
+            codeLines.forEach((line, index) => {
+                setTimeout(() => {
+                    const codeLine = document.createElement('div');
+                    codeLine.className = 'code-line';
+                    codeLine.textContent = line.replace('> _', '> ');
+                    
+                    if (line.endsWith('> _')) {
+                        const cursor = document.createElement('span');
+                        cursor.className = 'cursor';
+                        codeLine.appendChild(cursor);
+                    }
+                    
+                    terminalBody.appendChild(codeLine);
+                    terminalBody.scrollTop = terminalBody.scrollHeight;
+                }, index * 200);
+            });
+        }
+
+        // Toggle terminal visibility
+        terminalToggle.addEventListener('click', function() {
+            codeTerminal.classList.toggle('active');
+            if (codeTerminal.classList.contains('active') && terminalBody.children.length === 0) {
+                initTerminal();
+            }
+        });
+
+        terminalClose.addEventListener('click', function() {
+            codeTerminal.classList.remove('active');
+        });
+
+        // **Form Submission**
+        // Updated frontend JavaScript for contact form
+const contactForm = document.getElementById('contactForm');
+contactForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    // Get form values
+    const formData = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        subject: document.getElementById('subject').value,
+        message: document.getElementById('message').value
+    };
+
+    // Show loading state
+    const submitBtn = contactForm.querySelector('.submit-btn');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> SENDING...';
+    submitBtn.disabled = true;
+
+    try {
+        // Example in your Frontend React/HTML file:
+const response = await fetch('http://localhost:5500/api/contact', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(formData)
+});
+
+
+        const result = await response.json();
+
+        if (response.ok) {
+            // Success message with style
+            showNotification('Thank you for your message! I will get back to you soon.', 'success');
+            contactForm.reset();
+        } else {
+            showNotification(result.error || 'Failed to send message. Please try again.', 'error');
+        }
+    } catch (error) {
+        console.error('Submission error:', error);
+        showNotification('Network error. Please check your connection and try again.', 'error');
+    } finally {
+        // Reset button state
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    }
+});
+
+// Notification function
+function showNotification(message, type) {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 20px;
+        border-radius: 8px;
+        color: white;
+        font-family: 'Orbitron', sans-serif;
+        z-index: 10000;
+        max-width: 400px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        transform: translateX(400px);
+        transition: transform 0.3s ease;
+    `;
+    
+    if (type === 'success') {
+        notification.style.background = 'linear-gradient(135deg, var(--neon-blue), #0099cc)';
+        notification.style.border = '1px solid var(--neon-blue)';
+    } else {
+        notification.style.background = 'linear-gradient(135deg, var(--neon-pink), #cc0066)';
+        notification.style.border = '1px solid var(--neon-pink)';
+    }
+    
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    // Animate in
+    setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+    }, 100);
+    
+    // Remove after 5 seconds
+    setTimeout(() => {
+        notification.style.transform = 'translateX(400px)';
+        setTimeout(() => {
+            document.body.removeChild(notification);
+        }, 300);
+    }, 5500);
+}
+
+// Duplicate legacy form submission removed; using the consolidated handler defined earlier that includes notifications and button state management.
+
+        // **Skill Items Animation on Scroll**
+        const skillItems = document.querySelectorAll('.skill-item');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        skillItems.forEach((item, index) => {
+            item.style.opacity = '0';
+            item.style.transform = 'translateY(30px)';
+            item.style.transition = `all 0.5s ease ${index * 0.1}s`;
+            observer.observe(item);
+        });
+
+        // **Start Animations**
+        document.addEventListener('DOMContentLoaded', function() {
+            typeWriter();
+        });
+    </script>
+</body>
+</html>
